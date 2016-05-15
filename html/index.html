@@ -8,23 +8,38 @@
     <meta charset="utf-8">
 </head>
 <body>
-    <input type="button" value="addElem" onclick="addElem();">
-    <input type="button" value="Sort" onclick="Sort();">    
-    <input type="button" value="test" onclick="test();">
+    <input type="button" value="Добавить елемент" onclick="addElem();"> 
+    <input type="text" value="" id="addInput" placeholder="Залиште пустим для додавання випадкового числа">
+    <br><br>
+    <input type="button" value="Удалить елемент" onclick="delElem();">
     <input type="text" value="" id="delInput">
     <canvas id="canvas"></canvas>
 
 <script>  
     function addElem() {
+        if( $('#addInput').val() == "" )
+        {
+            array.push(Math.floor(300 + Math.random() * (1 - (300))));
+            nodesCount++;
+        }
+        else
+        {
+            var addInput = parseInt($('#addInput').val());
+            console.log(addInput);
+            var inside = -1;    
+            inside = finder(addInput); 
+            if (inside == -1 && inside != undefined && !isNaN(addInput)) { 
+                array.push($('#addInput').val());
+                nodesCount++;
+            }
+            else if (isNaN(addInput)) 
+                 alert("Тільки числа!"); 
+            else
+                alert("Такой елемент вже існує!"); 
 
-        array.push(Math.floor(300 + Math.random() * (1 - (300))));
-        nodesCount++;
-        delete binary_tree;
-        nodes = [];
-        binary_tree = new BinaryTree();
-        makeTree(binary_tree, array, 0, nodesCount);
-        binary_tree.inOrder();
-        buildTree();   
+        }
+        
+        rebuildTree();
     }
 
     function rebuildTree(){
@@ -32,7 +47,7 @@
         nodes = [];
         binary_tree = new BinaryTree();
         makeTree(binary_tree, array, 0, nodesCount);
-        binary_tree.inOrder();
+        binary_tree.preOrder();
         buildTree();   
     }
 
@@ -140,26 +155,40 @@ el_numberOfNodes = nodesCount;
     //sendPopUpMessage("Узел " + node.value + " удален! Дерево перестроено!")
 });*/
    
-   function finder(delInput) {
+   function finder(input) {
         for (var i = 0; i < array.length; i++) {
-            if(array[i]==delInput)
-            return 1;           
+            if(array[i]==input)
+            return i;           
         }
+        return -1;
     }
-   function test() {
-    var delInput = $('#delInput').val();
-    var inside = 0;
-    inside = finder(delInput);
 
-    if (inside==1) {
-        nodesCount -= 1;
-        array.splice(array.indexOf(delInput), 1);
-        rebuildTree();
-    }
-    else
-       alert("Такого елемента нету!") 
+    function delElem() {
+        if( $('#delInput').val() == "" && nodesCount > 1) {
+            array.splice(Math.floor(nodesCount + Math.random() * (1 - (nodesCount))), 1);
+            nodesCount--;
+        }
+        else if (nodesCount <= 1) {alert("Залишився останній елемент!"); }
+        else {
+            var delInput = parseInt($('#delInput').val());
+            var inside = -1;    
+            inside = finder(delInput);            
+            if (inside != -1 && inside != undefined && !isNaN(delInput)) {                
+                nodesCount -= 1;
+                array.splice(inside, 1);
+                rebuildTree();
+            }
+            else if (isNaN(delInput)) 
+                alert("Тільки числа!"); 
+            else
+                alert("Такого елемента нету!"); 
+        }
+        rebuildTree();  
 
   }
+
+
+
 
 
 </script>

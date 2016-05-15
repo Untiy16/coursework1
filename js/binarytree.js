@@ -315,18 +315,3 @@ function drawLink (binary_tree, node, cx) {
     
 }
 
-function getNodeByCoords(x, y, radius) {
-    var minXY = [];
-    var maxXY = [];
-    
-        for (n = 0; n < nodes.length; n++) {
-            minXY['x'] = nodes[n].x - radius;
-            minXY['y'] = nodes[n].y - radius;
-            maxXY['x'] = nodes[n].x + radius;
-            maxXY['y'] = nodes[n].y + radius;
-            if (x > minXY['x'] && x < maxXY['x'] && y > minXY['y'] && y < maxXY['y']) {
-                return nodes[n]
-            }
-        }
-     
-}
