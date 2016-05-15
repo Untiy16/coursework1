@@ -1,0 +1,152 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <title>Tree</title>    
+    <script src="../js/binarytree.js"></script>    
+    <script src="../js/jquery-1.11.3.min.js"></script>
+    <meta charset="utf-8">
+</head>
+<body>
+    <input type="button" value="addElem" onclick="addElem();">
+    <input type="button" value="Sort" onclick="Sort();">
+    <input type="button" value="test" onclick="test();">
+    <canvas id="canvas"></canvas>
+
+<script>  
+    function addElem() {
+
+        array.push(Math.floor(300 + Math.random() * (1 - (300))));
+        nodesCount++;
+        delete binary_tree;
+        nodes = [];
+        binary_tree = new BinaryTree();
+        makeTree(binary_tree, array, 0, nodesCount);
+        binary_tree.inOrder();
+       buildTree();   
+    }
+
+    function rebuildTree(){
+        delete binary_tree;
+        nodes = [];
+        binary_tree = new BinaryTree();
+        makeTree(binary_tree, array, 0, nodesCount);
+        binary_tree.inOrder();
+        buildTree();   
+    }
+
+   
+    canvas = $('#canvas');
+
+    var array = [];
+    binary_tree = new BinaryTree();
+    nodes = [];    
+    var c = document.getElementById('canvas');
+    var cx = c.getContext("2d");
+
+    var factorOfZoom;
+    drawType ='circle' ;
+
+    nodesCount = 4;//parseInt(el_numberOfNodes.val());
+    radius = 25;//parseInt(el_radius.val());
+    widthOfNode = 60;//parseInt(el_widthOfNode.val());
+    heightOfNode = 60;//parseInt(el_heightOfNode.val());
+    widthOfLastLevel = radius / 2 ;
+
+    factorOfZoom = radius / 20;
+    
+
+    factorOfExtension = 1.5 * factorOfZoom;
+
+    // -----------
+
+    arrayRandomizer(nodesCount, -500, 500);
+   // boobleSort(array);
+    makeTree(binary_tree, array, 0, nodesCount);
+
+   /* for (g = 0; g < nodesCount; g++)
+        binary_tree.addNode(array[g], array[g]);*/
+
+   binary_tree.preOrder();
+
+    buildTree();
+   
+
+   /* array.push(10);
+    nodesCount++;
+   delete binary_tree;
+
+        nodes = [];
+
+        binary_tree = new BinaryTree();
+        makeTree(binary_tree, array, 0, nodesCount);
+
+        binary_tree.preOrder();
+
+        setTimeout('buildTree()', 4000);*/
+         function Sort () {
+        for (var i = 0; i < array.length - 1; i++) {
+            for (var j = i; j < array.length; j++) {
+                if (array[i] > array[j]) {
+                    var tmp = array[i];
+                    array[i] = array[j];
+                    array[j] = tmp;
+                    rebuildTree();
+                   
+                }
+            }
+        }   
+    }
+
+
+    ii = 0;
+    jj =0;
+    function test(){
+        if(ii<array.length - 1)
+        {
+            
+         
+           (function(){
+
+            if(jj<array.length ){
+
+
+                if (array[ii] > array[jj]) {
+                    var tmp = array[ii];
+                    array[ii] = array[jj];
+                    array[jj] = tmp;
+                    rebuildTree();
+                   
+                }
+
+
+
+                 setTimeout(arguments.callee, 1);
+            }
+
+
+
+
+
+
+            }());
+
+
+
+
+        }
+        jj=0;
+        ii++;
+       
+
+    }
+   
+
+
+</script>
+
+   
+
+
+</body>
+</html>
