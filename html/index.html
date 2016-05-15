@@ -9,8 +9,9 @@
 </head>
 <body>
     <input type="button" value="addElem" onclick="addElem();">
-    <input type="button" value="Sort" onclick="Sort();">
+    <input type="button" value="Sort" onclick="Sort();">    
     <input type="button" value="test" onclick="test();">
+    <input type="text" value="" id="delInput">
     <canvas id="canvas"></canvas>
 
 <script>  
@@ -23,7 +24,7 @@
         binary_tree = new BinaryTree();
         makeTree(binary_tree, array, 0, nodesCount);
         binary_tree.inOrder();
-       buildTree();   
+        buildTree();   
     }
 
     function rebuildTree(){
@@ -99,48 +100,66 @@
     }
 
 
-    ii = 0;
-    jj =0;
-    function test(){
+    
+    /*function test(){
         if(ii<array.length - 1)
         {
             
          
            (function(){
-
             if(jj<array.length ){
-
 
                 if (array[ii] > array[jj]) {
                     var tmp = array[ii];
                     array[ii] = array[jj];
                     array[jj] = tmp;
                     rebuildTree();
-                   
-                }
+                                 }
 
 
 
                  setTimeout(arguments.callee, 1);
             }
 
-
-
-
-
-
             }());
-
-
-
-
         }
         jj=0;
-        ii++;
-       
+        ii++;      
 
+    }*/
+el_numberOfNodes = nodesCount;
+
+  /*  canvas.click(function (e) {
+    var node = getNodeByCoords(e.pageX, e.pageY, radius);
+    if (nodesCount != 1) {
+        nodesCount -= 1;
+        
+        
+        rebuildTree();
     }
+    //sendPopUpMessage("Узел " + node.value + " удален! Дерево перестроено!")
+});*/
    
+   function finder(delInput) {
+        for (var i = 0; i < array.length; i++) {
+            if(array[i]==delInput)
+            return 1;           
+        }
+    }
+   function test() {
+    var delInput = $('#delInput').val();
+    var inside = 0;
+    inside = finder(delInput);
+
+    if (inside==1) {
+        nodesCount -= 1;
+        array.splice(array.indexOf(delInput), 1);
+        rebuildTree();
+    }
+    else
+       alert("Такого елемента нету!") 
+
+  }
 
 
 </script>
