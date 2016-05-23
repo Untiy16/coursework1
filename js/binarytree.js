@@ -1,35 +1,36 @@
-Node = function(key, value){
-    this.key = key;
-    this.value = value;
-    this.left = null;
-    this.right = null;
-    this.count = 0;
-    this.x = 0;
-    this.y = 0;
-    this.level = 1;    
+Node = function(key, value){    
+    this.key        = key;
+    this.value      = value;
+    this.leftChild  = null;
+    this.rightChild = null;
+    this.count      = 0;
+    this.coordX 	= 0;
+    this.coordY 	= 0;
+    this.height     = 1;    
 };
 
 BinaryTree = function(){};
+
 BinaryTree.prototype.root = null;
+
 BinaryTree.prototype.addNode = function(key, value){
     this.root = putNode( this.root, key, value );
 };
+
 function putNode(node, key, value){
     if ( !node ) return new Node(key, value);
     if (node.key > key )
-        node.left = putNode( node.left, key, value);
+        node.leftChild = putNode( node.leftChild, key, value);
      else if (node.key < key) 
-        node.right = putNode(node.right, key, value);
+        	node.rightChild = putNode(node.rightChild, key, value);
      else if (node.key == key)
-        node.value = value;  
-
-    node.count = 1 + getSize(node.left) + getSize(node.right);
+        	node.value = value; 
+    node.count = 1 + getSize(node.leftChild) + getSize(node.rightChild);
     return node;
 }
 
 function getSize(node){
     if (!node) return 0;
-
     return node.count;
 }
 
@@ -38,8 +39,8 @@ BinaryTree.prototype.getNode = function(key){
     var currentNode = this.root;
 
     while (currentNode != null){
-        if (currentNode.key > key) currentNode = currentNode.left;
-        else if (currentNode.key < key) currentNode = currentNode.right;
+        if (currentNode.key > key) currentNode = currentNode.leftChild;
+        else if (currentNode.key < key) currentNode = currentNode.rightChild;
         else if (currentNode.key == key ) return currentNode;
     }
 
@@ -51,9 +52,8 @@ BinaryTree.prototype.getMinNode = function(){
 };
 function getMin(node){
 
-    if (!node.left) return node;
-
-    return getMin(node.left);
+    if (!node.leftChild) return node;
+    return getMin(node.leftChild);
 }
 
 BinaryTree.prototype.getMaxNode = function(){
@@ -61,20 +61,19 @@ BinaryTree.prototype.getMaxNode = function(){
 };
 function getMax(node){
 
-    if (!node.right) return node;
+    if (!node.rightChild) return node;
 
-    return getMax(node.right);
+    return getMax(node.rightChild);
 }
 
 BinaryTree.prototype.deleteMin = function(){
     deleteMin(this.root);
 };
 function deleteMin(node){
-    if (node.left == null) return node.right;
-
-    node.left = deleteMin(node.left);
-    node.count = 1 + getSize(node.left) + getSize(node.right);
-
+    if (node.leftChild == null) 
+    	return node.rightChild;
+    node.leftChild = deleteMin(node.leftChild);
+    node.count = 1 + getSize(node.leftChild) + getSize(node.rightChild);
     return node;
 }
 
@@ -85,8 +84,8 @@ BinaryTree.prototype.floor = function(key){
 function getFloor(node, key){
     if ( node == null ) return null;
     if (node.key == key ) return node;
-    if (node.key > key) return getFloor(node.left, key);
-    var x = getFloor(node.right, key);
+    if (node.key > key) return getFloor(node.leftChild, key);
+    var x = getFloor(node.rightChild, key);
     if (x) return x;
     return node;
 }
@@ -98,8 +97,8 @@ BinaryTree.prototype.ceil = function(key){
 function getCeil(node, key){
     if ( node == null ) return null;
     if (node.key == key ) return node;
-    if (node.key < key) return getCeil(node.right, key);
-    var x = getCeil(node.left, key);
+    if (node.key < key) return getCeil(node.rightChild, key);
+    var x = getCeil(node.leftChild, key);
     if (x) return x;
     return node;
 }
@@ -109,17 +108,17 @@ BinaryTree.prototype.deleteNode = function(key){
 };
 function deleteNode(node, key){
     if (!node) return null;
-    if (node.key > key) node.left = deleteNode(node.left, key);
-    else if (node.key < key) node.right = deleteNode(node.right, key);
+    if (node.key > key) node.leftChild = deleteNode(node.leftChild, key);
+    else if (node.key < key) node.rightChild = deleteNode(node.rightChild, key);
     else {
-        if (!node.right) return node.left;
-        if (!node.left) return node.right;
+        if (!node.rightChild) return node.leftChild;
+        if (!node.leftChild) return node.rightChild;
         var t = node;
-        node = getMin(t.right);
-        node.right = deleteMin(t.right);
-        node.left = t.left;
+        node = getMin(t.rightChild);
+        node.rightChild = deleteMin(t.rightChild);
+        node.leftChild = t.leftChild;
     }
-    node.count = 1 + getSize(node.left) + getSize(node.right);
+    node.count = 1 + getSize(node.leftChild) + getSize(node.rightChild);
     return node;
 }
 
@@ -129,8 +128,8 @@ BinaryTree.prototype.preOrder = function() {
 function preOrder(node){
     if (node == null) return;
     nodes.push(node);
-    preOrder(node.left);
-    preOrder(node.right);
+    preOrder(node.leftChild);
+    preOrder(node.rightChild);
 }
 BinaryTree.prototype.inOrder = function() {
 	inOrder(this.root);
@@ -138,9 +137,9 @@ BinaryTree.prototype.inOrder = function() {
 function inOrder(node){
 	if (node == null) return;
 	nodes.push(node);
-	inOrder(node.left);
+	inOrder(node.leftChild);
 	console.log(node.value);
-	inOrder(node.right);
+	inOrder(node.rightChild);
 }
 
 BinaryTree.prototype.postOrder = function() {
@@ -149,8 +148,8 @@ BinaryTree.prototype.postOrder = function() {
 function postOrder(node){
 	if (node == null) return;
 	nodes.push(node);
-	postOrder(node.left);
-	postOrder(node.right);
+	postOrder(node.leftChild);
+	postOrder(node.rightChild);
 	console.log(node.value);
 }
 
@@ -165,10 +164,10 @@ function bfs(node){
     while(queue.length > 0){
         var tempNode = queue.shift();
         values.push(tempNode.value);
-        if (tempNode.left)
-            queue.push(tempNode.left);  
-        if (tempNode.right)
-            queue.push(tempNode.right);
+        if (tempNode.leftChild)
+            queue.push(tempNode.leftChild);  
+        if (tempNode.rightChild)
+            queue.push(tempNode.rightChild);
         
     }
 
@@ -206,14 +205,14 @@ function arrayRandomizer (nodesCount, min, max) {
 }
 function setLevelsToNodes (nodes, binary_tree, maxLevel) {
     for (i = 0; i < nodes.length; i++) {
-        if (nodes[i].left)
-            binary_tree.getNode(nodes[i].left.value).level = nodes[i].level + 1;
+        if (nodes[i].leftChild)
+            binary_tree.getNode(nodes[i].leftChild.value).height = nodes[i].height + 1;
 
-        if (nodes[i].right)
-            binary_tree.getNode(nodes[i].right.value).level = nodes[i].level + 1;;
+        if (nodes[i].rightChild)
+            binary_tree.getNode(nodes[i].rightChild.value).height = nodes[i].height + 1;;
 
-        if (maxLevel < nodes[i].level)
-            maxLevel = nodes[i].level;
+        if (maxLevel < nodes[i].height)
+            maxLevel = nodes[i].height;
     }
 
     return maxLevel;
@@ -225,20 +224,20 @@ function setCanvasAttr (FOE, HON, radius, ML, WOLL, widthOfNode) {
 }
 
 function setCoords (nodes, binary_tree, radius,  factorOfExtension) {
-    nodes[0].x = (canvas.attr('width') / 2);
-    nodes[0].y = radius * 3.5 / 3;
+    nodes[0].coordX = (canvas.attr('width') / 2);
+    nodes[0].coordY = radius * 3.5 / 3;
     for (i = 0; i < nodes.length; i++) {
-        var xChange = (canvas.attr('width') / Math.pow(2, nodes[i].level + 1));
-        if (nodes[i].left) {
-            leftNode = binary_tree.getNode(nodes[i].left.value);
-            leftNode.x =  nodes[i].x - xChange ;
-            leftNode.y = nodes[i].y + radius * 3.5;
+        var xChange = (canvas.attr('width') / Math.pow(2, nodes[i].height + 1));
+        if (nodes[i].leftChild) {
+            leftNode = binary_tree.getNode(nodes[i].leftChild.value);
+            leftNode.coordX =  nodes[i].coordX - xChange ;
+            leftNode.coordY = nodes[i].coordY + radius * 3.5;
 
         }
-        if (nodes[i].right) {
-            rightNode = binary_tree.getNode(nodes[i].right.value);
-            rightNode.x = nodes[i].x + xChange ;
-            rightNode.y = nodes[i].y + radius * 3.5;
+        if (nodes[i].rightChild) {
+            rightNode = binary_tree.getNode(nodes[i].rightChild.value);
+            rightNode.coordX = nodes[i].coordX + xChange ;
+            rightNode.coordY = nodes[i].coordY + radius * 3.5;
         }
 
     }
@@ -288,28 +287,28 @@ function buildTree() {
 function drawNode(node, radius, context) {
 
     context.beginPath();
-    context.arc(node.x, node.y, radius, 0, Math.PI*2, true);
+    context.arc(node.coordX, node.coordY, radius, 0, Math.PI*2, true);
     context.fillStyle = "#00ff00";
     context.fill();   
    	context.fillStyle = 'black';
     context.font = "bold " + 14 + "px sans-serif";
     context.textBaseline = 'middle';
     context.textAlign = 'center';
-    context.fillText(node.value, node.x, node.y);
+    context.fillText(node.value, node.coordX, node.coordY);
     context.stroke();
 }
 
 function drawLink (binary_tree, node, cx) {
         cx.lineWidth = 3;
-        if (node.left) {
-            cx.moveTo(node.x, node.y);
+        if (node.leftChild) {
+            cx.moveTo(node.coordX, node.coordY);
             cx.lineTo(
-                binary_tree.getNode(node.left.value).x, binary_tree.getNode(node.left.value).y); 
+                binary_tree.getNode(node.leftChild.value).coordX, binary_tree.getNode(node.leftChild.value).coordY); 
             cx.stroke();
         }
-        if (node.right) {
-            cx.moveTo(node.x , node.y);
-            cx.lineTo(binary_tree.getNode(node.right.value).x, binary_tree.getNode(node.right.value).y);
+        if (node.rightChild) {
+            cx.moveTo(node.coordX , node.coordY);
+            cx.lineTo(binary_tree.getNode(node.rightChild.value).coordX, binary_tree.getNode(node.rightChild.value).coordY);
             cx.stroke();
         }
     

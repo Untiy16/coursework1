@@ -13,6 +13,7 @@
     <br><br>
     <input type="button" value="Удалить елемент" onclick="delElem();">
     <input type="text" value="" id="delInput">
+    <input type="button" value="test" onclick="test();"> 
     <canvas id="canvas"></canvas>
 
 <script>  
@@ -116,32 +117,11 @@
 
 
     
-    /*function test(){
-        if(ii<array.length - 1)
-        {
-            
-         
-           (function(){
-            if(jj<array.length ){
+    function test(){
+        var a= binary_tree.getNode(101);
+        alert(a.value);
 
-                if (array[ii] > array[jj]) {
-                    var tmp = array[ii];
-                    array[ii] = array[jj];
-                    array[jj] = tmp;
-                    rebuildTree();
-                                 }
-
-
-
-                 setTimeout(arguments.callee, 1);
-            }
-
-            }());
-        }
-        jj=0;
-        ii++;      
-
-    }*/
+    }
 el_numberOfNodes = nodesCount;
 
   /*  canvas.click(function (e) {
@@ -181,7 +161,7 @@ el_numberOfNodes = nodesCount;
             else if (isNaN(delInput)) 
                 alert("Тільки числа!"); 
             else
-                alert("Такого елемента нету!"); 
+                alert("Такого елемента немає!"); 
         }
         rebuildTree();  
 
