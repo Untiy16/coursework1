@@ -6,134 +6,62 @@
     <script src="../js/binarytree.js"></script>    
     <script src="../js/jquery-1.11.3.min.js"></script>
     <meta charset="utf-8">
+    <style>
+        input[type=button]{
+            margin: 2px;
+        }
+        p{
+            float: left;
+        }
+    </style>
 </head>
 <body>
-    <input type="button" value="Добавить елемент" onclick="addElem();"> 
-    <input type="text" value="" id="addInput" placeholder="Залиште пустим для додавання випадкового числа">
-    <br><br>
-    <input type="button" value="Удалить елемент" onclick="delElem();">
-    <input type="text" value="" id="delInput">
-    <input type="button" value="test" onclick="test();"> 
+    <input type="button" value="  Додати елемент  " onclick="addElem();"> 
+    <input type="text" value="" id="addInput" placeholder="Залиште порожнім для додавання випадкового числа" size="50">    
+    <br>
+    <input type="button" value="Видалити елемент" onclick="delElem();">
+    <input type="text" value="" id="delInput" placeholder="Залиште порожнім для видалення випадкового числа" size="50">
+    <br>
+    <input type="button" value="  Знайти елемент   " onclick="findElem();">
+    <input type="text" value="" id="findInput" placeholder="Введіть елемент для пошуку" size="50">
     <canvas id="canvas"></canvas>
 
-<script>  
-    function addElem() {
-        if( $('#addInput').val() == "" )
-        {
-            array.push(Math.floor(300 + Math.random() * (1 - (300))));
-            nodesCount++;
-        }
-        else
-        {
-            var addInput = parseInt($('#addInput').val());
-            console.log(addInput);
-            var inside = -1;    
-            inside = finder(addInput); 
-            if (inside == -1 && inside != undefined && !isNaN(addInput)) { 
-                array.push($('#addInput').val());
-                nodesCount++;
-            }
-            else if (isNaN(addInput)) 
-                 alert("Тільки числа!"); 
-            else
-                alert("Такой елемент вже існує!"); 
-
-        }
-        
-        rebuildTree();
-    }
-
-    function rebuildTree(){
-        delete binary_tree;
-        nodes = [];
-        binary_tree = new BinaryTree();
-        makeTree(binary_tree, array, 0, nodesCount);
-        binary_tree.preOrder();
-        buildTree();   
-    }
-
-   
+<script>    
     canvas = $('#canvas');
-
     var array = [];
-    binary_tree = new BinaryTree();
+    binaryTree = new BinaryTree();
     nodes = [];    
     var c = document.getElementById('canvas');
     var cx = c.getContext("2d");
-
-    var factorOfZoom;
-    drawType ='circle' ;
-
-    nodesCount = 4;//parseInt(el_numberOfNodes.val());
-    radius = 25;//parseInt(el_radius.val());
-    widthOfNode = 60;//parseInt(el_widthOfNode.val());
-    heightOfNode = 60;//parseInt(el_heightOfNode.val());
-    widthOfLastLevel = radius / 2 ;
-
-    factorOfZoom = radius / 20;
-    
-
-    factorOfExtension = 1.5 * factorOfZoom;
-
-    // -----------
-
+    var canvasSizeInc;   
+    nodesCount = 15;     //кількість вузлів
+    nodeRadius = 25;    //радіус круга      
+    widthOfLastLevel = nodeRadius / 2;
+    canvasSizeInc = nodeRadius / 20;
+    canvasDynamicSize = 1.5 * canvasSizeInc;  
     arrayRandomizer(nodesCount, -500, 500);
-   // boobleSort(array);
-    makeTree(binary_tree, array, 0, nodesCount);
+    boobleSort(array);
+    makeTree(binaryTree, array, 0, nodesCount);
+    binaryTree.preOrder();
+    buildTree();   
 
-   /* for (g = 0; g < nodesCount; g++)
-        binary_tree.addNode(array[g], array[g]);*/
-
-   binary_tree.preOrder();
-
-    buildTree();
    
-
-   /* array.push(10);
-    nodesCount++;
-   delete binary_tree;
-
-        nodes = [];
-
-        binary_tree = new BinaryTree();
-        makeTree(binary_tree, array, 0, nodesCount);
-
-        binary_tree.preOrder();
-
-        setTimeout('buildTree()', 4000);*/
-         function Sort () {
-        for (var i = 0; i < array.length - 1; i++) {
-            for (var j = i; j < array.length; j++) {
-                if (array[i] > array[j]) {
-                    var tmp = array[i];
-                    array[i] = array[j];
-                    array[j] = tmp;
-                    rebuildTree();
-                   
-                }
-            }
-        }   
-    }
+         
 
 
     
-    function test(){
-        var a= binary_tree.getNode(101);
-        alert(a.value);
-
+    function findElem(){
+        if($('#findInput').val()!="")
+        {
+            var findInput = parseInt($('#findInput').val());
+            var a = binaryTree.getNode(findInput);
+            if (a == null) 
+                alert("Такого елемента немає в дереві!");
+            else 
+                alert("Елемент "+a.value+" знаходиться на " +a.height+" рівні.");
+        }
     }
-el_numberOfNodes = nodesCount;
-
-  /*  canvas.click(function (e) {
-    var node = getNodeByCoords(e.pageX, e.pageY, radius);
-    if (nodesCount != 1) {
-        nodesCount -= 1;
-        
-        
-        rebuildTree();
-    }
-    //sendPopUpMessage("Узел " + node.value + " удален! Дерево перестроено!")
-});*/
+ 
    
    function finder(input) {
         for (var i = 0; i < array.length; i++) {
@@ -164,17 +92,42 @@ el_numberOfNodes = nodesCount;
                 alert("Такого елемента немає!"); 
         }
         rebuildTree();  
-
   }
 
+   function addElem() {
+        if( $('#addInput').val() == "")
+        {
+            array.push(Math.floor(300 + Math.random() * (1 - (300))));
+            nodesCount++;            
+        }
+        else
+        {
+            var addInput = parseInt($('#addInput').val());
+            console.log(addInput);
+            var inside = -1;    
+            inside = finder(addInput); 
+            if (inside == -1 && inside != undefined && !isNaN(addInput)) { 
+                array.push($('#addInput').val());
+                nodesCount++;
+            }
+            else if (isNaN(addInput)) 
+                 alert("Тільки числа!"); 
+            else
+                alert("Такой елемент вже існує!"); 
 
+        }        
+        rebuildTree();
+    }
 
-
-
+    function rebuildTree(){
+        delete binaryTree;
+        nodes = [];
+        binaryTree = new BinaryTree();
+        boobleSort(array);
+        makeTree(binaryTree, array, 0, nodesCount);
+        binaryTree.preOrder();
+        buildTree();   
+    }
 </script>
-
-   
-
-
 </body>
 </html>

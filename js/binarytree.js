@@ -128,6 +128,7 @@ BinaryTree.prototype.preOrder = function() {
 function preOrder(node){
     if (node == null) return;
     nodes.push(node);
+   // console.log(node.value);
     preOrder(node.leftChild);
     preOrder(node.rightChild);
 }
@@ -203,41 +204,42 @@ function arrayRandomizer (nodesCount, min, max) {
         array[i] = Math.floor(min + Math.random() * (max - min));
 
 }
-function setLevelsToNodes (nodes, binary_tree, maxLevel) {
+function setLevelsToNodes (nodes, binaryTree, maxHeight) {
     for (i = 0; i < nodes.length; i++) {
         if (nodes[i].leftChild)
-            binary_tree.getNode(nodes[i].leftChild.value).height = nodes[i].height + 1;
+            binaryTree.getNode(nodes[i].leftChild.value).height = nodes[i].height + 1;
 
         if (nodes[i].rightChild)
-            binary_tree.getNode(nodes[i].rightChild.value).height = nodes[i].height + 1;;
+            binaryTree.getNode(nodes[i].rightChild.value).height = nodes[i].height + 1;;
 
-        if (maxLevel < nodes[i].height)
-            maxLevel = nodes[i].height;
+        if (maxHeight < nodes[i].height)
+            maxHeight = nodes[i].height;
     }
 
-    return maxLevel;
+    return maxHeight;
 }
 
-function setCanvasAttr (FOE, HON, radius, ML, WOLL, widthOfNode) {
-    canvas.attr('height', getValidHeight(FOE, radius, ML));
-    canvas.attr('width', getValidWidth(radius, WOLL, ML));
+function setCanvasAttr (canvasDynamicSize, nodeRadius, maxHeight, widthOfLastLevel) {
+    canvas.attr('height', getValidHeight(canvasDynamicSize, nodeRadius, maxHeight));
+    canvas.attr('width', getValidWidth(nodeRadius, widthOfLastLevel, maxHeight));
 }
 
-function setCoords (nodes, binary_tree, radius,  factorOfExtension) {
-    nodes[0].coordX = (canvas.attr('width') / 2);
-    nodes[0].coordY = radius * 3.5 / 3;
+function setNodesCoords (nodes, binaryTree, nodeRadius, canvasDynamicSize) {
+	var rootCoordX = canvas.attr('width') / 2;
+	var rootCoordY = nodeRadius * 3.5 / 3;
+    nodes[0].coordX = rootCoordX;
+    nodes[0].coordY = rootCoordY;
     for (i = 0; i < nodes.length; i++) {
-        var xChange = (canvas.attr('width') / Math.pow(2, nodes[i].height + 1));
+        var canvasAttr = (canvas.attr('width') / Math.pow(2, nodes[i].height + 1));
         if (nodes[i].leftChild) {
-            leftNode = binary_tree.getNode(nodes[i].leftChild.value);
-            leftNode.coordX =  nodes[i].coordX - xChange ;
-            leftNode.coordY = nodes[i].coordY + radius * 3.5;
-
+            leftNode = binaryTree.getNode(nodes[i].leftChild.value);
+            leftNode.coordX =  nodes[i].coordX - canvasAttr;
+            leftNode.coordY = nodes[i].coordY + nodeRadius * 3.5;
         }
         if (nodes[i].rightChild) {
-            rightNode = binary_tree.getNode(nodes[i].rightChild.value);
-            rightNode.coordX = nodes[i].coordX + xChange ;
-            rightNode.coordY = nodes[i].coordY + radius * 3.5;
+            rightNode = binaryTree.getNode(nodes[i].rightChild.value);
+            rightNode.coordX = nodes[i].coordX + canvasAttr;
+            rightNode.coordY = nodes[i].coordY + nodeRadius * 3.5;
         }
 
     }
@@ -269,25 +271,27 @@ function getValidWidth (R, WOLL, ML) {
     return calcWidth;
 }
 
-function drawTree (nodes, binary_tree, cx, radius,  factorOfZoom) {
+function drawTree (nodes, binaryTree, cx, nodeRadius, canvasSizeInc) {
     for (i = 0; i < nodes.length; i++) {        
-        drawLink(binary_tree, nodes[i], cx);         
-        drawNode(nodes[i], radius, cx, factorOfZoom);
+        drawLink(binaryTree, nodes[i], cx);         
+        drawNode(nodes[i], nodeRadius, cx, canvasSizeInc);
         
     }
 }
 
 function buildTree() {
-    var maxLevel = setLevelsToNodes(nodes, binary_tree, -999);
-    setCanvasAttr(factorOfExtension, heightOfNode, radius, maxLevel, widthOfLastLevel, widthOfNode);
-    setCoords(nodes, binary_tree, radius,  factorOfExtension);
-    drawTree(nodes, binary_tree, cx, radius, factorOfZoom);
+	
+    var maxHeight = setLevelsToNodes(nodes, binaryTree, -999);
+    setCanvasAttr(canvasDynamicSize, nodeRadius, maxHeight, widthOfLastLevel);
+    setNodesCoords(nodes, binaryTree, nodeRadius,  canvasDynamicSize);
+    drawTree(nodes, binaryTree, cx, nodeRadius, canvasSizeInc);
+
 }
 
-function drawNode(node, radius, context) {
+function drawNode(node, nodeRadius, context) {
 
     context.beginPath();
-    context.arc(node.coordX, node.coordY, radius, 0, Math.PI*2, true);
+    context.arc(node.coordX, node.coordY, nodeRadius, 0, Math.PI*2, true);
     context.fillStyle = "#00ff00";
     context.fill();   
    	context.fillStyle = 'black';
@@ -298,19 +302,21 @@ function drawNode(node, radius, context) {
     context.stroke();
 }
 
-function drawLink (binary_tree, node, cx) {
+function drawLink (binaryTree, node, cx) {	
         cx.lineWidth = 3;
         if (node.leftChild) {
             cx.moveTo(node.coordX, node.coordY);
             cx.lineTo(
-                binary_tree.getNode(node.leftChild.value).coordX, binary_tree.getNode(node.leftChild.value).coordY); 
+                binaryTree.getNode(node.leftChild.value).coordX, 
+                binaryTree.getNode(node.leftChild.value).coordY); 
             cx.stroke();
         }
         if (node.rightChild) {
-            cx.moveTo(node.coordX , node.coordY);
-            cx.lineTo(binary_tree.getNode(node.rightChild.value).coordX, binary_tree.getNode(node.rightChild.value).coordY);
+            cx.moveTo(node.coordX, node.coordY);
+            cx.lineTo(
+            	binaryTree.getNode(node.rightChild.value).coordX, 
+            	binaryTree.getNode(node.rightChild.value).coordY);
             cx.stroke();
-        }
-    
+        }    
 }
 
